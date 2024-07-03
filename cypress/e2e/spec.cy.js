@@ -56,4 +56,71 @@ describe('template spec', () => {
     cy.get('.todo-list li')
       .should('have.length', 2);
   });
+
+  it('Editar uma tarefa existente', () => {
+    cy.visit('http://127.0.0.1:7001');
+  
+    // Insere uma nova tarefa
+    cy.get('.new-todo')
+      .type('TP2 de Engenharia de Software{enter}');
+  
+    // Clica duas vezes para entrar no modo de edição
+    cy.get('.todo-list li')
+      .first()
+      .dblclick();
+  
+    // Limpa o campo de edição e digita o novo nome da tarefa
+    cy.get('.todo-list li .edit')
+      .clear()
+      .type('TP2{enter}');
+  
+    // Espera até que a tarefa editada seja exibida corretamente
+    cy.get('.todo-list li')
+      .should('have.length', 1)
+      .first()
+      .should('have.text', 'TP2');
+  });
+
+  it('Desmarcar uma tarefa', () => {
+    cy.visit('http://127.0.0.1:7001');
+  
+    // Insere uma nova tarefa
+    cy.get('.new-todo')
+      .type('TP2 de Engenharia de Software{enter}');
+
+    cy.get('.todo-list li .toggle')
+    .first()
+    .click();
+    
+    cy.contains('Completed').click();
+    cy.get('.todo-list li')
+    .should('have.length', 1)
+    
+    cy.get('.todo-list li .toggle')
+    .first()
+    .click();
+
+    cy.contains('Active').click();
+    cy.get('.todo-list li')
+      .should('have.length', 1)
+
+  });
+
+  it('limpar todas as tarefas', () => {
+    cy.visit('http://127.0.0.1:7001'); 
+
+    cy.get('.new-todo')
+      .type('TP2 de Engenharia de Software{enter}')
+      .type('TP2 Testes{enter}')
+      .type('Testes{enter}');
+
+    cy.get('.toggle-all-label')
+    .first()
+    .click();
+    
+    cy.contains('Completed').click();
+    cy.get('.todo-list li')
+      .should('have.length', 3);
+  });
+
 });
